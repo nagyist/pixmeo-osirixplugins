@@ -95,7 +95,7 @@
 			irect.size.width = irect.size.height = 0;
 			
 			[newROI setROIRect:irect];
-			[[viewerController imageView] roiSet: newROI];
+            newROI.curView = [viewerController imageView];
 			
 			// copy the name
 			[newROI setName: @"generated"];
