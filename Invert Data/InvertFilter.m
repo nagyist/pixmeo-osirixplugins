@@ -33,7 +33,7 @@
 			
 			if( i == [[viewerController imageView] curImage])
 			{
-				NSLog(@"Cool, this is the image (%d) currently displayed!", i);
+				NSLog(@"Cool, this is the image (%d) currently displayed!", (int) i);
 			}
 			
 			// fImage is a pointer on the pixels, ALWAYS represented in float (float*) or in ARGB (unsigned char*) 

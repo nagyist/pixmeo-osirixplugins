@@ -9,25 +9,25 @@
 #import "OsiriX/DCM.h"
 #import "OsiriX/DCMObject.h"
 #import "OsiriX/DCMTransferSyntax.h"
-#import "DCMPix.h"
+#import "OsiriXAPI/DCMPix.h"
 
-#include "osconfig.h" /* make sure OS specific configuration is included first */
-#include "djdecode.h"  /* for dcmjpeg decoders */
-#include "djencode.h"  /* for dcmjpeg encoders */
-#include "dcrledrg.h"  /* for DcmRLEDecoderRegistration */
-#include "dcrleerg.h"  /* for DcmRLEEncoderRegistration */
-#include "djrploss.h"
-#include "djrplol.h"
-#include "dcpixel.h"
-#include "dcrlerp.h"
+#include "OsiriXAPI/osconfig.h" /* make sure OS specific configuration is included first */
+#include "OsiriXAPI/djdecode.h"  /* for dcmjpeg decoders */
+#include "OsiriXAPI/djencode.h"  /* for dcmjpeg encoders */
+#include "OsiriXAPI/dcrledrg.h"  /* for DcmRLEDecoderRegistration */
+#include "OsiriXAPI/dcrleerg.h"  /* for DcmRLEEncoderRegistration */
+#include "OsiriXAPI/djrploss.h"
+#include "OsiriXAPI/djrplol.h"
+#include "OsiriXAPI/dcpixel.h"
+#include "OsiriXAPI/dcrlerp.h"
 
-#include "dcdatset.h"
-#include "dcmetinf.h"
-#include "dcfilefo.h"
-#include "dcdebug.h"
-#include "dcuid.h"
-#include "dcdict.h"
-#include "dcdeftag.h"
+#include "OsiriXAPI/dcdatset.h"
+#include "OsiriXAPI/dcmetinf.h"
+#include "OsiriXAPI/dcfilefo.h"
+#include "OsiriXAPI/dcdebug.h"
+#include "OsiriXAPI/dcuid.h"
+#include "OsiriXAPI/dcdict.h"
+#include "OsiriXAPI/dcdeftag.h"
 
 
 @implementation JPEG
@@ -80,6 +80,12 @@
             }
         }
         
+        if( original_xfer.isEncapsulated())
+        {
+            dataset->chooseRepresentation(EXS_LittleEndianExplicit, NULL);
+            dataset->removeAllButCurrentRepresentations();
+        }
+        
         // this causes the lossless JPEG version of the dataset to be created
         DcmXfer oxferSyn( tSyntax);
         dataset->chooseRepresentation(tSyntax, params);
@@ -100,6 +106,9 @@
             [[NSFileManager defaultManager] removeItemAtPath: dest error:nil];
             cond = fileformat.saveFile( [dest UTF8String], tSyntax);
             OFBool status =  (cond.good()) ? YES : NO;
+            
+            if( status == NO)
+                NSLog( @"FAILED TO WRITE IMAGE");
         }
     }
     
